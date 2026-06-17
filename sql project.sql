@@ -1,6 +1,3 @@
-select * FROM  sales_pipeline;
+using 'engage date', calculate the number of sales opportunitoes each months
+which month had the hights ? 
 
-SELECT month(engage_date), count(*)
-FROM sales_pipeline
-GROUP BY MONTH ( engage_date)
-ORDER BY count(*) DESC
