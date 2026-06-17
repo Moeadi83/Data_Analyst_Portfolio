@@ -1,7 +1,7 @@
-The Situation: I have been hired as a sales analyst for Judah inc. a company that specialized in selling computer hardware to large business
-The assignment: The Vp of sales is mostly happy with hewr team's performance, but she want a better understanding of its strengths and weaknesss.
-  I have been assign to perform an analyis of last year sales, calculating key statistics on the health of the salespipe line, the performance of the sales agents,
-  the popularity of products, and the company's customers
+The Situation: I have joined Judah Inc., a company specializing in computer hardware sales to large businesses, as a sales analyst.
+The Vice President of Sales is generally satisfied with her team's performance but seeks a clearer understanding of its strengths and weaknesses.
+I have been tasked with analyzing last year's sales, including key statistics on the sales pipeline's health and sales agent performance.
+I will also assess product popularity and customer profiles.
 
 
 
@@ -157,6 +157,7 @@ Wilburn Farren	  157640
 Violet Mclelland	123431
 
 Which Manager had the highest win rate ( Revenue)
+  
 SELECT st.manager,SUM(close_value) as revenue
 FROM sales_teams st 
 LEFT JOIN sales_pipeline sp on st.sales_agent =  sp.sales_agent
@@ -177,7 +178,7 @@ Dustin Brinkmann	1094363
 
 
   
-Whuich Regional office sold the most units of GTX plus Pro?
+Which Regional office sold the most units of GTX plus Pro?
 
 SELECT  st.regional_office, count(*) as units_sold
 FROM sales_teams st
@@ -190,5 +191,79 @@ Central	        170
 West	          160
 East	          149
 
+Objective 3
+Product analysis
 
+For March deals,identify the top product by revenue and compare it to the top by uinits sold
+
+SELECT product, SUM(close_value) as revenue, count(*) as units_sold
+FROM sales_pipeline
+WHERE MONTH (close_date) = 3 and deal_stage = 'won'
+GROUP BY product
+ORDER BY 2 DESC;
+
+
+product   	  revenue	      units_sold
+GTXPro	       376966	            80
+MG Advanced	    290207	         84
+GTX Plus Pro	  278081	        51
+GTX Plus Basic	88512	          82
+GTX Basic	      69204	          126
+GTK 500 	      25897	           1
+MG Special	    5805	            107
+
+
+  
+
+
+  
+ Calculate the average difference between 'sales_price' and 'close_value' for each product, and note if
+the results suggest a data issue
+
+SELECT sp.product, AVG(p.sales_price - sp.close_value) as difference, AVG( sp.close_value / p.sales_price) as discount
+FROM sales_pipeline sp
+LEFT JOIN products p on sp. product=p.product
+WHERE sp.deal_stage = 'won'
+GROUP BY product
+ORDER BY difference DESC; 
+product	      difference	              discount
+GTK 500	        60.5333	                0.99773333
+GTX PlusBasic	 15.9464       	          0.98544992
+GTX Basic	     4.3574	                 0.99207639
+MG Advanced	   4.0291	                 0.99881162
+MG Special	  -0.1929	                 1.00350618
+GTX Plus Pro	-7.8768       	        1.0014357
+*GTXPro	       NULL	                        NULL
+ 
+GTXPRO return to Null because in Sales_pipeline table GTXPRO is written with no space
+however in products GTX PRO is written with space. Data Engineer will need to fix this. 
+
+
+
+
+
+
+
+
+  
+Calculate total_revenue by product series and compare their performance  
+  
+SELECT p.series, sum(sp.close_value) as revenue
+FROM products p
+LEFT JOIN sales_pipeline sp on p.product = sp.product
+WHERE sp.deal_stage = 'won'
+GROUP BY p.series
+ORDER BY 2 DESC;
+  
+series	revenue
+GTX	   3834189
+MG	   2260155
+GTK	   400612
+
+  
+
+  
+
+  
+  
 
