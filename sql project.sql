@@ -162,7 +162,8 @@ SELECT st.manager,SUM(close_value) as revenue
 FROM sales_teams st 
 LEFT JOIN sales_pipeline sp on st.sales_agent =  sp.sales_agent
 GROUP BY st.manager
-ORDER BY 2 DESC; 
+ORDER BY 2 DESC;
+  
 manager	        revenue
 Melvin Marxen	   2251930
 Summer Sewald	   1964750
@@ -185,12 +186,15 @@ FROM sales_teams st
 LEFT JOIN sales_pipeline sp on st. sales_agent = sp. sales_agent
 WHERE deal_stage = 'won' and sp.product = 'GTX PLUS Pro'
 GROUP BY st. regional_office
-ORDER BY 2 DESC; 
+ORDER BY 2 DESC;
+  
 regional_office	units_sold
 Central	        170
 West	          160
 East	          149
 
+
+  
 Objective 3
 Product analysis
 
@@ -205,12 +209,12 @@ ORDER BY 2 DESC;
 
 product   	  revenue	      units_sold
 GTXPro	       376966	            80
-MG Advanced	    290207	         84
-GTX Plus Pro	  278081	        51
-GTX Plus Basic	88512	          82
-GTX Basic	      69204	          126
-GTK 500 	      25897	           1
-MG Special	    5805	            107
+MG Advanced	    290207	          84
+GTX Plus Pro	  278081	          51
+GTX Plus Basic	88512	            82
+GTX Basic	      69204	           126
+GTK 500 	      25897	             1
+MG Special	    5805	           107
 
 
   
@@ -225,7 +229,8 @@ FROM sales_pipeline sp
 LEFT JOIN products p on sp. product=p.product
 WHERE sp.deal_stage = 'won'
 GROUP BY product
-ORDER BY difference DESC; 
+ORDER BY difference DESC;
+  
 product	      difference	              discount
 GTK 500	        60.5333	                0.99773333
 GTX PlusBasic	 15.9464       	          0.98544992
