@@ -9,3 +9,144 @@ The Objectives: Overview: trends inencounter volume, types and lengths
                 Cost and Coverage Insight: Insurance coverage proceduress and claim costs
                 Patients Behavior Analysis: visit Patters, length of stay and readmission 
 
+
+
+Objective 1 overview encounters
+
+a. how many total Encounters occured each year
+
+SELECT YEAR(START) AS yr,COUNT(id) AS total_encounters,YEAR(START) AS yr
+FROM encounters
+GROUP BY yr
+ORDER BY yr;
+yr	total_encounters
+2011	1336
+2012	2106
+2013	2495
+2014	3885
+2015	2469
+2016	2451
+2017	2360
+2018	2292
+2019	2228
+2020	2519
+2021	3530
+2022	220
+
+b. For each yera, what percentage of all encounters belong to each encunter class
+(ambulatory,outpatient,wellness, urgent care, emergency, and inpatient)?
+
+SELECT YEAR(START) AS yr, 
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'ambulatory' THEN 1 ELSE 0 END) /cOUNT(*) * 100, 1) AS ambulatory,
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'outpatient' THEN 1 ELSE 0 END) / COUNT(*) * 100, 1)AS outpatient,
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'wellness' THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS wellness,
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'urgentcare' THEN 1 ELSE 0 END)/ COUNT(*) * 100, 1) AS urgent_care,
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'emergency' THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS emergency,
+ROUND(SUM(CASE WHEN ENCOUNTERCLASS = 'inpatient' THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS inpatient
+FROM encounters
+GROUP BY yr
+ORDER BY yr;
+
+yr	ambulatory	outpatient	wellness	urgent_care	emergency	inpatient
+2011	49.9	24.5	13	2.2	4.1	6.2
+2012	42.5	21.1	9.1	14.2	8.7	4.4
+2013	44.3	19.4	7.5	14.4	9	5.4
+2014	60.3	17.9	4.9	8.4	5.6	3
+2015	43.5	20.5	6.9	15.4	9.2	4.5
+2016	43.8	19.6	7.4	13.9	10.2	5.1
+2017	41.8	20.1	7.2	16.3	9.2	5.3
+2018	40.7	20.9	7.6	16.4	10.8	3.5
+2019	38	20.5	7.5	17.8	10.2	6
+2020	47.3	19.7	6.3	14.5	9.3	2.9
+2021	36.9	40.2	4.4	10.7	6.3	1.6
+2022	55	16.8	5.5	12.7	8.2	1.8
+
+c. What percentage of encounter were over 24 hours versus under 24 hours
+
+SELECT      ROUND(SUM(CASE WHEN TIMESTAMPDIFF(HOUR, START, STOP) >= 24 THEN 1 ELSE 0 END) / count(*) * 100,1) AS over_24_hours,
+            ROUND(SUM(CASE WHEN TIMESTAMPDIFF(HOUR, START, STOP) < 24 THEN 1 ELSE 0 END) / COUNT(*) * 100,1) AS under_24_hours
+ FROM encounters;       
+
+
+over_24_hours	under_24_hours
+4.1	                      95.9
+
+Objective 2 Cost & Coverage Insights
+
+a. How many encounters had zero payer coverage, and what percentage of total encounters does this represent?
+
+SELECT SUM(CASE WHEN PAYER_COVERAGE = 0  THEN 1 ELSE 0 END) AS zero_payer_coverage,
+       COUNT(*) AS total_encounters,
+        ROUND(SUM(CASE WHEN PAYER_COVERAGE = 0  THEN 1 ELSE 0 END) / COUNT(*) * 100,1) AS pct_zero_payer_coverage
+FROM encounters;
+
+zero_payer_coverage	total_encounters	pct_zero_payer_coverage
+13586	            27891	                                48.7
+
+
+b. what are the top 10 most frequent procedures performed and the average base cost for each?
+
+SELECT CODE, DESCRIPTION, COUNT(*) AS num_procedures, AVG(BASE_COST) AS avg_base_cost
+FROM procedures
+GROUP BY CODE, DESCRIPTION
+ORDER BY num_procedures DESC
+LIMIT 10;
+
+CODE	DESCRIPTION	                                                num_procedures	        avg_base_cost
+710824005	Assessment of health and social care needs (procedure)	4596	                        431
+385763009	Hospice care (regime/therapy)	                        4098	                         431
+171207006	Depression screening (procedure)	                        3614	                         431
+4.54711E+14	Depression screening using Patient Health Questionnaire Two-Item score (procedure)	3614	   431
+4.28211E+14	Assessment of substance use (procedure)	            2906	                          431
+265764009	Renal dialysis (procedure)	                        2746	                       1004.0863
+762993000	Assessment using Morse Fall Scale (procedure)	            2422	                             431
+710841007	Assessment of anxiety (procedure)	                        2288	                             431
+430193006	Medication Reconciliation (procedure)	            2284	                             509.1243
+713106006	Screening for drug abuse (procedure)	            1484	                             431
+
+
+
+C. what are the top 10 procedures with the highest average abse cost and the number of times they were performed?
+
+SELECT CODE, DESCRIPTION, AVG(BASE_COST) AS avg_base_cost, COUNT(*) AS num_procedures
+FROM procedures
+GROUP BY CODE, DESCRIPTION
+ORDER BY avg_base_cost  DESC
+LIMIT 10;
+CODE	DESCRIPTION	                        avg_base_cost	                        num_procedures
+305351004	Admit to ICU (procedure)	206260.4	                                                5
+232717009	Coronary artery bypass grafting	47085.8889	                                                9
+392021009	Lumpectomy of breast (procedure)	29353	                                                5
+302497006	Hemodialysis (procedure)	29299.5556	                                                27
+447365002	Insertion of biventricular implantable cardioverter defibrillator	27201	            4
+180325003	Electrical cardioversion	25903.1106	                                                1383
+43075005	Partial resection of colon	25229.2857	                                                7
+432231006	Fine needle aspiration biopsy of lung (procedure)	23141	                        1
+433112001	Percutaneous mechanical thrombectomy of portal vein using fluoroscopic guidance	20228.0351	57
+415070008	Percutaneous coronary intervention	19728	                                                9
+
+
+
+d. what is the average total claim cost for encounters, broken down by payer?
+
+SELECT p. NAME, AVG(e.TOTAL_CLAIM_COST) AS avg_total_claim_cost
+FROM payers p LEFT JOIN encounters e ON p.id = e.PAYER
+GROUP BY p.NAME
+ORDER BY avg_total_claim_cost DESC;
+
+NAME	            avg_total_claim_cost
+Medicaid	            6205.219002
+NO_INSURANCE	5593.197475
+Anthem	            4236.811151
+Humana	            3269.300148
+Blue Cross Blue Shield	3245.584876
+Cigna Health	2996.950507
+UnitedHealthcare	2848.3422
+Aetna	            2767.047115
+Medicare	            2167.551569
+Dual Eligible	1696.190779
+
+
+
+
+
