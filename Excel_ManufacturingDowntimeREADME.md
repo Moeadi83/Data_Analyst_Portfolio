@@ -6,7 +6,7 @@
                Identify main downtime factors 
                Calculate downtime by operator and factor
 
- a- create new batch time
+
 
 
 
