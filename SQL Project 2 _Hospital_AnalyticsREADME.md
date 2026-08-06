@@ -1,13 +1,4 @@
-Situation: I have been hired as a DATA Analyst for a health care analytics consulting
-            firm that helps hospitals use data to improve patient care and reduce costs
 
-The task: I have been working with Massachusetts General Hospital to Help their annual performance report
-          I have given the task to analyze patient encounters, costs, coverage, and behavior trends to support 
-          planning and improve care and operations
-
-The Objectives: Overview: trends inencounter volume, types and lengths
-                Cost and Coverage Insight: Insurance coverage proceduress and claim costs
-                Patients Behavior Analysis: visit Patters, length of stay and readmission 
 
 
 
