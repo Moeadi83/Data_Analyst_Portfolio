@@ -1,4 +1,13 @@
+I have been hired as Data Analyst for for healthcare analytics consulting
+firm that helps hospitals use data to improve patient care and reduce costs
 
+
+I have been assign to work with Massachusetts General Hospital to help prepare their annual performance report
+I been ask to analyze patient encounter and improve care and operation.
+
+The objective: Encounters Overview: trends In encounter volume, types, and lengths
+			   Cost & Coverage Insights: insurance coverage, procedures, and claim costs
+			   Patient behavior Analysis: visit patterns, lengths of stay and readmission
 
 
 
@@ -24,7 +33,7 @@ yr	total_encounters
 2021	3530
 2022	220
 
-b. For each yera, what percentage of all encounters belong to each encunter class
+b. For each year, what percentage of all encounters belong to each encunter class
 (ambulatory,outpatient,wellness, urgent care, emergency, and inpatient)?
 
 SELECT YEAR(START) AS yr, 
